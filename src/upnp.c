@@ -25,6 +25,16 @@ static int reverse_dns(char *ip, char *name, int len) {
 	return 1;
 }
 
+static void print_ip(char * controlURL, char *servicetype) {
+	char wan_address[64];
+	UPNP_GetExternalIPAddress(controlURL, servicetype, wan_address);
+	printf("%s\n", wan_address);
+
+	char name[MAX_NAME] = { 0 };
+	reverse_dns(wan_address, name, sizeof(name));
+	printf("%s\n", name);
+}
+
 int main(void) {
 
 	int error = 0;
@@ -38,14 +48,8 @@ int main(void) {
 	if (status != 1)
 		return -1;
 
-	char wan_address[64];
-	UPNP_GetExternalIPAddress(upnp_urls.controlURL, upnp_data.first.servicetype,
-			wan_address);
-	printf("%s\n", wan_address);
-
-	char name[MAX_NAME] = { 0 };
-	reverse_dns(wan_address, name, sizeof(name));
-	printf("%s\n", name);
+	print_ip(upnp_urls.controlURL, upnp_data.first.servicetype);
+	print_ip(upnp_urls.controlURL, upnp_data.second.servicetype);
 
 	unsigned int down = 0, up = 0;
 	UPNP_GetLinkLayerMaxBitRates(upnp_urls.controlURL,
