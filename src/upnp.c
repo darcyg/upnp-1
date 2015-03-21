@@ -33,6 +33,8 @@ static void print_ip(char * controlURL, char *servicetype) {
 	char name[MAX_NAME] = { 0 };
 	reverse_dns(wan_address, name, sizeof(name));
 	printf("%s\n", name);
+
+	publish(wan_address, name);
 }
 
 int main(void) {
